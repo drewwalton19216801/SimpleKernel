@@ -1,7 +1,13 @@
 // main.c -- Defines the C-code kernel entry point, calls initialisation routines.
 
+#include <monitor.h>
+
 int main(struct multiboot *mboot_ptr)
 {
-    // All our initialisation calls will go in here.
-    return 0xDEADBABA;
+    // Initialise the screen (by clearing it)
+    monitor_clear();
+    // Write out a sample string
+    monitor_write("Hello, world!");
+    
+    return 0;
 }

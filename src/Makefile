@@ -1,5 +1,7 @@
 SOURCES=boot.o \
-		main.o
+		common.o \
+		main.o \
+		monitor.o
 
 INCPATH=-I./include \
 		-I./include/lib \
