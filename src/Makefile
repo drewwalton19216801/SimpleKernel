@@ -1,7 +1,11 @@
 SOURCES=boot.o \
-		common.o \
 		main.o \
-		monitor.o
+		monitor.o \
+		common.o \
+		descriptor_tables.o \
+		isr.o \
+		interrupt.o \
+		gdt.o
 
 INCPATH=-I./include \
 		-I./include/lib \
