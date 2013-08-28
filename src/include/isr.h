@@ -2,7 +2,7 @@
 // isr.h -- Interface and structures for high level interrupt service routines.
 //
 
-#include <common.h>
+#include "common.h"
 
 // A few defines to make life a little easier
 #define IRQ0 32
@@ -33,5 +33,5 @@ typedef struct registers
 // Enables registration of callbacks for interrupts or IRQs.
 // For IRQs, to ease confusion, use the #defines above as the
 // first parameter.
-typedef void (*isr_t)(registers_t);
+typedef void (*isr_t)(registers_t*);
 void register_interrupt_handler(u8int n, isr_t handler);

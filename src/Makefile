@@ -6,23 +6,31 @@ SOURCES=boot.o \
 		isr.o \
 		interrupt.o \
 		gdt.o \
-		timer.o
+		timer.o \
+        kheap.o \
+        paging.o \
+        ordered_array.o \
+        fs.o \
+        initrd.o \
+        task.o \
+        process.o \
+        syscall.o
+        
+KOUT=../out/kernel
 
-INCPATH=-I./include \
-		-I./include/lib \
-		-I./include/simple
-		
-CFLAGS=-m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector $(INCPATH)
+INCPATH=-I./include
+
+CFLAGS=-m32 -nostdlib -nostdinc -fno-builtin $(INCPATH)
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 
 all: $(SOURCES) link
 
 clean:
-	-rm -rf *.o ../out/kernel
+	-rm *.o $(KOUT)
 
 link:
-	ld -melf_i386 $(LDFLAGS) -o ../out/kernel $(SOURCES)
+	ld -melf_i386 $(LDFLAGS) -o $(KOUT) $(SOURCES)
 
 .s.o:
 	nasm $(ASFLAGS) $<
