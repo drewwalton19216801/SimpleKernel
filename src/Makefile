@@ -5,7 +5,8 @@ SOURCES=boot.o \
 		descriptor_tables.o \
 		isr.o \
 		interrupt.o \
-		gdt.o
+		gdt.o \
+		timer.o
 
 INCPATH=-I./include \
 		-I./include/lib \

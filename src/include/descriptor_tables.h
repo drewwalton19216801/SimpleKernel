@@ -8,7 +8,6 @@
 // Initialisation function is publicly accessible.
 void init_descriptor_tables();
 
-
 // This structure contains the value of one GDT entry.
 // We use the attribute 'packed' to tell GCC not to change
 // any of the alignment in the structure.
@@ -90,4 +89,21 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
+extern void irq0 ();
+extern void irq1 ();
+extern void irq2 ();
+extern void irq3 ();
+extern void irq4 ();
+extern void irq5 ();
+extern void irq6 ();
+extern void irq7 ();
+extern void irq8 ();
+extern void irq9 ();
+extern void irq10();
+extern void irq11();
+extern void irq12();
+extern void irq13();
+extern void irq14();
+extern void irq15();
+
 
