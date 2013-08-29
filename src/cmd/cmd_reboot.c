@@ -3,4 +3,5 @@
 
 void cmd_reboot() {
 	monitor_write("System is going down for reboot NOW!\n");
+	hard_reset_now();
 }

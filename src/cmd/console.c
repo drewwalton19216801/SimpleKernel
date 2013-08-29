@@ -7,6 +7,7 @@ const static struct {
 	{ "panic", cmd_panic },
 	{ "ver", cmd_ver },
 	{ "reboot", cmd_reboot },
+	{ "ls", cmd_ls },
 };
 
 void newcmd() {
@@ -66,7 +67,6 @@ int return_fn(char *fn) {
 	ret = lookup_and_call(fn);
 	if (ret == -1) {
 		memset(&cmd[0], 0, sizeof(cmd));
-		newcmd();
 		return 1;
 	}
 	memset(&cmd[0], 0, sizeof(cmd));

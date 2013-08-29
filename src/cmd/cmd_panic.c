@@ -2,5 +2,6 @@
 #include <simple/panic.h>
 
 void cmd_panic() {
-	panic("Help me!");
+	asm volatile("int $0x3");
+	for(;;);
 }

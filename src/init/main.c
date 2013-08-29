@@ -15,6 +15,8 @@
 #include <simple/lock.h>
 #include <simple/keyboard.h>
 #include <simple/string.h>
+#include <simple/fs.h>
+#include <simple/initrd.h>
 
 #include <simple/cmd/cmds.h>
 
@@ -30,11 +32,15 @@ int kernel_main(multiboot_t *mboot_ptr)
 
   init_gdt ();
   init_idt ();
-
   init_timer (20);
   init_pmm (mboot_ptr->mem_upper);
   init_vmm ();
   init_heap ();
+  
+  uint32_t placement_address;
+  uint32_t initrd_location = *((uint32_t*)mboot_ptr->mods_addr);
+  uint32_t initrd_end = *(uint32_t*)(mboot_ptr->mods_addr+4);
+  placement_address = initrd_end;
 
   // Find all the usable areas of memory and inform the physical memory manager about them.
   uint32_t i = mboot_ptr->mmap_addr;
@@ -57,6 +63,7 @@ int kernel_main(multiboot_t *mboot_ptr)
     // so we must add sizeof (uint32_t).
     i += me->size + sizeof (uint32_t);
   }
+  fs_root = initialise_initrd(initrd_location);
   kernel_elf = elf_from_multiboot (mboot_ptr);
   asm volatile ("sti");
   init_scheduler (init_threading ());

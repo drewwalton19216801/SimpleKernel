@@ -4,6 +4,9 @@
 #define FS_H
 
 #include <simple/common.h>
+#include <simple/multiboot.h>
+#include <simple/string.h>
+#include <simple/initrd.h>
 
 #define FS_FILE        0x01
 #define FS_DIRECTORY   0x02
@@ -60,5 +63,9 @@ void open_fs(fs_node_t *node, uint8_t read, uint8_t write);
 void close_fs(fs_node_t *node);
 struct dirent *readdir_fs(fs_node_t *node, uint32_t index);
 fs_node_t *finddir_fs(fs_node_t *node, char *name);
+
+// Initialises the initial ramdisk. It gets passed the address of the multiboot module,
+// and returns a completed filesystem node.
+extern fs_node_t *initialise_initrd(uint32_t location);
 
 #endif

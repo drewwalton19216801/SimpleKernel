@@ -5,7 +5,6 @@
 
 #include <simple/common.h>
 #include <simple/fs.h>
-#include <simple/string.h>
 
 typedef struct
 {
@@ -20,8 +19,6 @@ typedef struct
     uint32_t length;   // Length of the file.
 } initrd_file_header_t;
 
-// Initialises the initial ramdisk. It gets passed the address of the multiboot module,
-// and returns a completed filesystem node.
-fs_node_t *initialise_initrd(uint32_t location);
+extern uint32_t placement_address;
 
 #endif
