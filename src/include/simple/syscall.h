@@ -3,7 +3,7 @@
 #ifndef SYSCALL_H
 #define SYSCALL_H
 
-#include "common.h"
+#include <simple/common.h>
 
 void initialise_syscalls();
 

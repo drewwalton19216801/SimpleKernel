@@ -3,8 +3,8 @@
 #ifndef PAGING_H
 #define PAGING_H
 
-#include "common.h"
-#include "isr.h"
+#include <simple/common.h>
+#include <simple/isr.h>
 
 typedef struct page
 {

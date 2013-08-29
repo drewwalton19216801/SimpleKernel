@@ -6,7 +6,7 @@
 #ifndef DESCRIPTOR_TABLES_H
 #define DESCRIPTOR_TABLES_H
 
-#include "common.h"
+#include <simple/common.h>
 
 // Initialisation function is publicly accessible.
 void init_descriptor_tables();

@@ -27,7 +27,7 @@ extern size_t strspn(const char *,const char *);
 extern int strcmp(const char *,const char *);
 extern int strncmp(const char *,const char *,size_t);
 
-extern void * memset(void *,int,size_t);
+extern void * memset(void * s,char c,size_t count);
 extern void * memcpy(void *,const void *,size_t);
 extern void * memmove(void *,const void *,size_t);
 extern void * memscan(void *,int,size_t);
@@ -36,7 +36,7 @@ extern int memcmp(const void *,const void *,size_t);
 /*
  * Include machine specific inline routines
  */
-#include <asm/string.h>
+//#include <asm/string.h>
 
 #ifdef __cplusplus
 }

@@ -3,8 +3,9 @@
 #ifndef INITRD_H
 #define INITRD_H
 
-#include "common.h"
-#include "fs.h"
+#include <simple/common.h>
+#include <simple/fs.h>
+#include <simple/string.h>
 
 typedef struct
 {

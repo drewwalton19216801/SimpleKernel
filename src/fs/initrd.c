@@ -99,7 +99,8 @@ fs_node_t *initialise_initrd(u32int location)
         // of memory.
         file_headers[i].offset += location;
         // Create a new file node.
-        strcpy(root_nodes[i].name, &file_headers[i].name);
+        char *headers = (char *)&file_headers[i].name;
+        strcpy(root_nodes[i].name, headers);
         root_nodes[i].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
         root_nodes[i].length = file_headers[i].length;
         root_nodes[i].inode = i;

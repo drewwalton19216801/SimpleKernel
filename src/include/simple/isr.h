@@ -2,7 +2,7 @@
 // isr.h -- Interface and structures for high level interrupt service routines.
 //
 
-#include "common.h"
+#include <simple/common.h>
 
 // A few defines to make life a little easier
 #define IRQ0 32
