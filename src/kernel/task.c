@@ -2,8 +2,8 @@
 // task.c - Implements the functionality needed to multitask.
 //
 
-#include <task.h>
-#include <paging.h>
+#include <simple/task.h>
+#include <simple/paging.h>
 
 // The currently running task.
 volatile task_t *current_task;

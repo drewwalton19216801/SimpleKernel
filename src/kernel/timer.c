@@ -1,8 +1,8 @@
 // timer.c -- Initialises the PIT, and handles clock updates.
 
-#include <timer.h>
-#include <isr.h>
-#include <monitor.h>
+#include <simple/timer.h>
+#include <simple/isr.h>
+#include <simple/monitor.h>
 
 u32int tick = 0;
 

@@ -2,8 +2,8 @@
 //            a placement malloc() for use before the heap is 
 //            initialised.
 
-#include <kheap.h>
-#include <paging.h>
+#include <simple/kheap.h>
+#include <simple/paging.h>
 
 // end is defined in the linker script.
 extern u32int end;

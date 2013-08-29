@@ -1,6 +1,6 @@
 // common.c -- Defines some global functions.
 
-#include <common.h>
+#include <simple/common.h>
 
 // Write a byte out to the specified port.
 void outb(u16int port, u8int value)

@@ -1,14 +1,15 @@
 // main.c -- Defines the C-code kernel entry point, calls initialisation routines.
 
-#include <monitor.h>
-#include <descriptor_tables.h>
-#include <timer.h>
-#include <paging.h>
-#include <multiboot.h>
-#include <fs.h>
-#include <initrd.h>
-#include <task.h>
-#include <syscall.h>
+#include <simple/monitor.h>
+#include <simple/descriptor_tables.h>
+#include <simple/timer.h>
+#include <simple/paging.h>
+#include <simple/multiboot.h>
+#include <simple/fs.h>
+#include <simple/initrd.h>
+#include <simple/task.h>
+#include <simple/syscall.h>
+#include <simple/string.h>
 
 extern u32int placement_address;
 u32int initial_esp;
@@ -46,6 +47,21 @@ int main(struct multiboot *mboot_ptr, u32int initial_stack)
     switch_to_user_mode();
 
     syscall_monitor_write("Hello, user world!\n");
+    int compare = strcmp("hello", "bye");
+    if (compare == 0) {
+		// this should never happen
+		syscall_monitor_write("\"hello\" and \"bye\" are equal\n");
+	} else {
+		syscall_monitor_write("\"hello\" and \"bye\" are not equal\n");
+	}
+	
+	compare = strcmp("hello", "hello");
+    if (compare == 0) {
+		syscall_monitor_write("\"hello\" and \"hello\" are equal\n");
+	} else {
+		// this should never happen
+		syscall_monitor_write("\"hello\" and \"hello\" are not equal\n");
+	}
 
     return 0;
 }

@@ -1,9 +1,9 @@
 // syscall.c -- Defines the implementation of a system call system.
 
-#include <syscall.h>
-#include <isr.h>
+#include <simple/syscall.h>
+#include <simple/isr.h>
 
-#include <monitor.h>
+#include <simple/monitor.h>
 
 static void syscall_handler(registers_t *regs);
 

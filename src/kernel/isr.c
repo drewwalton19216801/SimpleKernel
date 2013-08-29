@@ -2,9 +2,9 @@
 // isr.c -- High level interrupt service routines and interrupt request handlers.
 //
 
-#include <common.h>
-#include <isr.h>
-#include <monitor.h>
+#include <simple/common.h>
+#include <simple/isr.h>
+#include <simple/monitor.h>
 
 isr_t interrupt_handlers[256];
 

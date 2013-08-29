@@ -3,6 +3,7 @@ SOURCES=asm/boot.o \
 		init/main.o \
 		drivers/video/monitor.o \
 		lib/common.o \
+		lib/string.o \
 		init/descriptor_tables.o \
 		kernel/isr.o \
 		asm/interrupt.o \

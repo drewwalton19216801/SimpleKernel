@@ -1,6 +1,6 @@
 // monitor.c -- Defines functions for writing to the monitor.
 
-#include <monitor.h>
+#include <simple/monitor.h>
 
 // The VGA framebuffer starts at 0xB8000.
 u16int *video_memory = (u16int *)0xB8000;
