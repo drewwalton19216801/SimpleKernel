@@ -45,6 +45,7 @@ int kbthread(void *arg)
 				printk("Got command: %s", cmd);
 				memset(&cmd[0], 0, sizeof(cmd));
 				monitor_put(c);
+				monitor_write("$ ");
 			}
 		} else {
 			append(cmd, c);
@@ -95,7 +96,7 @@ int kernel_main(multiboot_t *mboot_ptr)
   asm volatile("sti");
   init_keyboard_driver();
   monitor_write("SimpleKernel 0.0.2\n");
-  
+  monitor_write("$ ");
   uint32_t *stack = kmalloc(0x400) + 0x3F0;
   thread_t *t = create_thread(&kbthread, (void*)0x567, stack);
   for(;;)
