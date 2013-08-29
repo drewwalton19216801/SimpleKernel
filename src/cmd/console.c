@@ -1,4 +1,5 @@
 #include <simple/cmd/cmds.h>
+//#include <simple/binfmt_elf.h>
 
 const static struct {
 	const char *name;

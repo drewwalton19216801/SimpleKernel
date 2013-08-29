@@ -17,6 +17,7 @@ extern int conthread(void *arg);
 extern void start_console();
 extern int return_fn(char *fn);
 extern int lookup_and_call(const char *name);
+extern void append(char * s, char c);
 
 
 #endif
