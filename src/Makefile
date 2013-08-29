@@ -1,6 +1,7 @@
 CC=gcc
 SOURCES=asm/boot.o \
 		init/main.o \
+		drivers/keyboard/keyboard.o \
 		drivers/video/monitor.o \
 		lib/common.o \
 		lib/string.o \

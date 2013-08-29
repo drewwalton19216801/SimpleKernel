@@ -10,6 +10,7 @@
 #include <simple/task.h>
 #include <simple/syscall.h>
 #include <simple/string.h>
+#include <simple/keyboard.h>
 
 extern u32int placement_address;
 u32int initial_esp;
@@ -25,6 +26,7 @@ int main(struct multiboot *mboot_ptr, u32int initial_stack)
     // Initialise the PIT to 100Hz
     asm volatile("sti");
     init_timer(50);
+    keyboard_install();
 
     // Find the location of our initial ramdisk.
     ASSERT(mboot_ptr->mods_count > 0);
@@ -62,6 +64,14 @@ int main(struct multiboot *mboot_ptr, u32int initial_stack)
 		// this should never happen
 		syscall_monitor_write("\"hello\" and \"hello\" are not equal\n");
 	}
-
+	unsigned char oldkey;
+	unsigned char key;
+    while (1) {
+		oldkey = key;
+		key = inb(0x60);
+		if (!(oldkey==key)){
+			keyboard_callback(key);
+		}
+	}
     return 0;
 }
