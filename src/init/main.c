@@ -16,44 +16,12 @@
 #include <simple/keyboard.h>
 #include <simple/string.h>
 
+#include <simple/cmd/cmds.h>
+
 
 elf_t kernel_elf;
 
 spinlock_t lock = SPINLOCK_UNLOCKED;
-
-void append(char * s, char c)
-{
-	int len = strlen(s);
-	s[len] = c;
-	s[len+1] = '\0';
-}
-
-char cmd[256];
-char PanicCmd[] = "panic";
-char c;
-char *cmdptr;
-
-int kbthread(void *arg)
-{
-	for (;;) {
-		c = keyboard_getchar();
-		if (c == '\n') {
-			monitor_put(c);
-			if (strncmp(cmd, PanicCmd, 1) == 0) {
-				panic("Got forced panic!");
-			} else {
-				printk("Got command: %s", cmd);
-				memset(&cmd[0], 0, sizeof(cmd));
-				monitor_put(c);
-				monitor_write("$ ");
-			}
-		} else {
-			append(cmd, c);
-			monitor_put(c);
-		}
-	}
-	return 6;
-}
 
 int kernel_main(multiboot_t *mboot_ptr)
 {
@@ -96,9 +64,7 @@ int kernel_main(multiboot_t *mboot_ptr)
   asm volatile("sti");
   init_keyboard_driver();
   monitor_write("SimpleKernel 0.0.2\n");
-  monitor_write("$ ");
-  uint32_t *stack = kmalloc(0x400) + 0x3F0;
-  thread_t *t = create_thread(&kbthread, (void*)0x567, stack);
+  start_console();
   for(;;)
   {
       
