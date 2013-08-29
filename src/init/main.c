@@ -1,77 +1,99 @@
 // main.c -- Defines the C-code kernel entry point, calls initialisation routines.
 
-#include <simple/monitor.h>
-#include <simple/descriptor_tables.h>
-#include <simple/timer.h>
-#include <simple/paging.h>
 #include <simple/multiboot.h>
-#include <simple/fs.h>
-#include <simple/initrd.h>
-#include <simple/task.h>
-#include <simple/syscall.h>
-#include <simple/string.h>
+#include <simple/common.h>
+
+#include <simple/monitor.h>
+#include <simple/gdt.h>
+#include <simple/idt.h>
+#include <simple/timer.h>
+#include <simple/elf.h>
+#include <simple/pmm.h>
+#include <simple/vmm.h>
+#include <simple/heap.h>
+#include <simple/thread.h>
+#include <simple/lock.h>
 #include <simple/keyboard.h>
+#include <simple/string.h>
 
-extern u32int placement_address;
-u32int initial_esp;
 
-int main(struct multiboot *mboot_ptr, u32int initial_stack)
+elf_t kernel_elf;
+
+spinlock_t lock = SPINLOCK_UNLOCKED;
+
+int fn(void *arg)
 {
-    initial_esp = initial_stack;
-    // Initialise all the ISRs and segmentation
-    init_descriptor_tables();
-    // Initialise the screen (by clearing it)
-    monitor_clear();
+  for(;;) {
+    int i;
+    spinlock_lock(&lock);
+    for(i = 0; i < 80; i++)
+      printk("a");
+    spinlock_unlock(&lock);
+  }
+  return 6;
+}
 
-    // Initialise the PIT to 100Hz
-    asm volatile("sti");
-    init_timer(50);
-    keyboard_install();
+int kernel_main(multiboot_t *mboot_ptr)
+{
 
-    // Find the location of our initial ramdisk.
-    ASSERT(mboot_ptr->mods_count > 0);
-    u32int initrd_location = *((u32int*)mboot_ptr->mods_addr);
-    u32int initrd_end = *(u32int*)(mboot_ptr->mods_addr+4);
-    // Don't trample our module with placement accesses, please!
-    placement_address = initrd_end;
+  monitor_clear();
 
-    // Start paging.
-    initialise_paging();
+  init_gdt ();
+  init_idt ();
 
-    // Start multitasking.
-    initialise_tasking();
+  init_timer (20);
+  init_pmm (mboot_ptr->mem_upper);
+  init_vmm ();
+  init_heap ();
 
-    // Initialise the initial ramdisk, and set it as the filesystem root.
-    fs_root = initialise_initrd(initrd_location);
+  // Find all the usable areas of memory and inform the physical memory manager about them.
+  uint32_t i = mboot_ptr->mmap_addr;
+  while (i < mboot_ptr->mmap_addr + mboot_ptr->mmap_length)
+  {
+    mmap_entry_t *me = (mmap_entry_t*) i;
 
-    initialise_syscalls();
+    // Does this entry specify usable RAM?
+    if (me->type == 1)
+    {
+      uint32_t j;
+      // For every page in this entry, add to the free page stack.
+      for (j = me->base_addr_low; j < me->base_addr_low+me->length_low; j += 0x1000)
+      {
+        pmm_free_page (j);
+      }
+    }
 
-    switch_to_user_mode();
+    // The multiboot specification is strange in this respect - the size member does not include "size" itself in its calculations,
+    // so we must add sizeof (uint32_t).
+    i += me->size + sizeof (uint32_t);
+  }
+  kernel_elf = elf_from_multiboot (mboot_ptr);
+  asm volatile ("sti");
+  init_scheduler (init_threading ());
+  /*
+  uint32_t *stack = kmalloc (0x400) + 0x3F0;
 
-    syscall_monitor_write("Hello, user world!\n");
-    int compare = strcmp("hello", "bye");
-    if (compare == 0) {
-		// this should never happen
-		syscall_monitor_write("\"hello\" and \"bye\" are equal\n");
-	} else {
-		syscall_monitor_write("\"hello\" and \"bye\" are not equal\n");
-	}
-	
-	compare = strcmp("hello", "hello");
-    if (compare == 0) {
-		syscall_monitor_write("\"hello\" and \"hello\" are equal\n");
-	} else {
-		// this should never happen
-		syscall_monitor_write("\"hello\" and \"hello\" are not equal\n");
-	}
-	unsigned char oldkey;
-	unsigned char key;
-    while (1) {
-		oldkey = key;
-		key = inb(0x60);
-		if (!(oldkey==key)){
-			keyboard_callback(key);
-		}
-	}
-    return 0;
+  thread_t *t = create_thread(&fn, (void*)0x567, stack);
+  for(;;) {
+    int i;
+    spinlock_lock(&lock);
+    for(i = 0; i < 80; i++)
+      printk("b");
+    spinlock_unlock(&lock);
+  }*/
+
+  asm volatile("sti");
+  init_keyboard_driver();
+  monitor_write("SimpleKernel 0.0.2\n");
+  for(;;)
+  {
+      char c = keyboard_getchar();
+      
+      if (c)
+          monitor_put(c);
+  }
+  for (;;);
+
+	return 0xdeadbeef;
+
 }

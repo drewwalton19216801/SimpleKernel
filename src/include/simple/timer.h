@@ -1,3 +1,4 @@
+//
 // timer.h -- Defines the interface for all PIT-related functions.
 
 #ifndef TIMER_H
@@ -5,6 +6,6 @@
 
 #include <simple/common.h>
 
-void init_timer(u32int frequency);
+void init_timer (uint32_t frequency);
 
 #endif

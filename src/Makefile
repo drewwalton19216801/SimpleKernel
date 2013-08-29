@@ -1,40 +1,33 @@
+CSOURCES=$(shell find -maxdepth 10 -name *.c)
+COBJECTS=$(patsubst %.c, %.o, $(CSOURCES))
+SSOURCES=$(shell find -maxdepth 10 -name *.s)
+SOBJECTS=$(patsubst %.s, %.o, $(SSOURCES))
+
 CC=gcc
-SOURCES=asm/boot.o \
-		init/main.o \
-		drivers/keyboard/keyboard.o \
-		drivers/video/monitor.o \
-		lib/common.o \
-		lib/string.o \
-		init/descriptor_tables.o \
-		kernel/isr.o \
-		asm/interrupt.o \
-		asm/gdt.o \
-		kernel/timer.o \
-        mm/kheap.o \
-        mm/paging.o \
-        mm/ordered_array.o \
-        fs/fs.o \
-        fs/initrd.o \
-        kernel/task.o \
-        kernel/process.o \
-        kernel/syscall.o
+LD:=ld
         
 KOUT=../out/kernel
 
 INCPATH=-I./include
 
-CFLAGS=-m32 -nostdlib -nostdinc -fno-builtin $(INCPATH)
-LDFLAGS=-Tlink.ld
+CFLAGS=-nostdlib -fno-builtin -m32 $(INCPATH)
+LDFLAGS=-melf_i386 -Tlink.ld
 ASFLAGS=-felf
 
-all: $(SOURCES) link
+all: $(COBJECTS) $(SOBJECTS) link
 
 clean:
 	-find ./ -type f -name '*.o' -delete
 	-rm -f $(KOUT)
 
 link:
-	ld -melf_i386 $(LDFLAGS) -o $(KOUT) $(SOURCES)
+	@echo Linking
+	@$(LD) $(LDFLAGS) -o $(KOUT) $(SOBJECTS) $(COBJECTS)
 
 .s.o:
-	nasm $(ASFLAGS) $<
+	@echo Assembling $<
+	@nasm $(ASFLAGS) $<
+
+.c.o:
+	@echo Compiling $<
+	@$(CC) $(CFLAGS) -o $@ -c $<
