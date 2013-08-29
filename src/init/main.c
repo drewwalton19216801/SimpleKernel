@@ -21,16 +21,37 @@ elf_t kernel_elf;
 
 spinlock_t lock = SPINLOCK_UNLOCKED;
 
-int fn(void *arg)
+void append(char * s, char c)
 {
-  for(;;) {
-    int i;
-    spinlock_lock(&lock);
-    for(i = 0; i < 80; i++)
-      printk("a");
-    spinlock_unlock(&lock);
-  }
-  return 6;
+	int len = strlen(s);
+	s[len] = c;
+	s[len+1] = '\0';
+}
+
+char cmd[256];
+char PanicCmd[] = "panic";
+char c;
+char *cmdptr;
+
+int kbthread(void *arg)
+{
+	for (;;) {
+		c = keyboard_getchar();
+		if (c == '\n') {
+			monitor_put(c);
+			if (strncmp(cmd, PanicCmd, 1) == 0) {
+				panic("Got forced panic!");
+			} else {
+				printk("Got command: %s", cmd);
+				memset(&cmd[0], 0, sizeof(cmd));
+				monitor_put(c);
+			}
+		} else {
+			append(cmd, c);
+			monitor_put(c);
+		}
+	}
+	return 6;
 }
 
 int kernel_main(multiboot_t *mboot_ptr)
@@ -70,30 +91,18 @@ int kernel_main(multiboot_t *mboot_ptr)
   kernel_elf = elf_from_multiboot (mboot_ptr);
   asm volatile ("sti");
   init_scheduler (init_threading ());
-  /*
-  uint32_t *stack = kmalloc (0x400) + 0x3F0;
-
-  thread_t *t = create_thread(&fn, (void*)0x567, stack);
-  for(;;) {
-    int i;
-    spinlock_lock(&lock);
-    for(i = 0; i < 80; i++)
-      printk("b");
-    spinlock_unlock(&lock);
-  }*/
 
   asm volatile("sti");
   init_keyboard_driver();
   monitor_write("SimpleKernel 0.0.2\n");
+  
+  uint32_t *stack = kmalloc(0x400) + 0x3F0;
+  thread_t *t = create_thread(&kbthread, (void*)0x567, stack);
   for(;;)
   {
-      char c = keyboard_getchar();
       
-      if (c)
-          monitor_put(c);
   }
   for (;;);
-
 	return 0xdeadbeef;
 
 }
