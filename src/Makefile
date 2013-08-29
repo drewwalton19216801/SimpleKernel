@@ -1,20 +1,21 @@
-SOURCES=boot.o \
-		main.o \
-		monitor.o \
-		common.o \
-		descriptor_tables.o \
-		isr.o \
-		interrupt.o \
-		gdt.o \
-		timer.o \
-        kheap.o \
-        paging.o \
-        ordered_array.o \
-        fs.o \
-        initrd.o \
-        task.o \
-        process.o \
-        syscall.o
+CC=gcc
+SOURCES=asm/boot.o \
+		init/main.o \
+		drivers/video/monitor.o \
+		lib/common.o \
+		init/descriptor_tables.o \
+		kernel/isr.o \
+		asm/interrupt.o \
+		asm/gdt.o \
+		kernel/timer.o \
+        mm/kheap.o \
+        mm/paging.o \
+        mm/ordered_array.o \
+        fs/fs.o \
+        fs/initrd.o \
+        kernel/task.o \
+        kernel/process.o \
+        kernel/syscall.o
         
 KOUT=../out/kernel
 
@@ -27,7 +28,8 @@ ASFLAGS=-felf
 all: $(SOURCES) link
 
 clean:
-	-rm *.o $(KOUT)
+	-find ./ -type f -name '*.o' -delete
+	-rm -f $(KOUT)
 
 link:
 	ld -melf_i386 $(LDFLAGS) -o $(KOUT) $(SOURCES)
