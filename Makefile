@@ -6,18 +6,18 @@ SOBJECTS=$(patsubst %.s, %.o, $(SSOURCES))
 CC=gcc
 LD:=ld
         
-KOUT=../out/kernel
+KOUT=./out/kernel
 
-INCPATH=-I./include
+INCPATH=-I./src/include
 
 CFLAGS=-nostdlib -fno-builtin -m32 $(INCPATH)
-LDFLAGS=-melf_i386 -Tlink.ld
+LDFLAGS=-melf_i386 -Tsrc/link.ld
 ASFLAGS=-felf
 
 all: $(COBJECTS) $(SOBJECTS) link
 
 clean:
-	-find ./ -type f -name '*.o' -delete
+	-find ./src/ -type f -name '*.o' -delete
 	-rm -f $(KOUT)
 
 link:
