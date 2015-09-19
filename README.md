@@ -5,9 +5,9 @@ A simple hobby kernel that doesn't do much
 
 PREREQUISITES:
 -------------
-1. GCC (tested with 4.8.2)
+1. GCC (tested with 5.2.0)
 2. NASM (tested with 2.11)
-3. QEMU (tested with 1.7.0)
+3. QEMU (tested with 2.4.0)
 
 TO BUILD:
 -------------
