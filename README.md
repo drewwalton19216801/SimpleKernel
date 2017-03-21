@@ -19,8 +19,7 @@ TO CLEAN:
 >
 >$ make clean<br />
 
-TO TEST (after building):
+TO TEST IN QEMU (after building):
 -------------
 >
->$ cd ./out<br />
->$ ./run_qemu.sh<br />
+>$ make test<br />

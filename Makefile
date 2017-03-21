@@ -7,6 +7,7 @@ CC=gcc
 LD:=ld
         
 KOUT=./out/kernel
+QEMU=qemu-system-i386
 
 INCPATH=-I./src/include
 
@@ -31,3 +32,7 @@ link:
 .c.o:
 	@echo Compiling $<
 	@$(CC) $(CFLAGS) -o $@ -c $<
+
+test: all
+	@echo Running QEMU... $<
+	@$(QEMU) -kernel $(KOUT) -initrd ./out/initrd.img
